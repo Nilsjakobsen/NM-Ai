@@ -1,17 +1,11 @@
-def return_action(sensor_data):
-    """
-    Enkel AI:
-    - Hvis det er en hindring rett foran, sving høyre
-    - Hvis ikke, akselerer
-    """
-    front = sensor_data.get("front", 1000)
-    left = sensor_data.get("front_left_front", 1000)
-    right = sensor_data.get("front_right_front", 1000)
+from typing import Dict
+from ppo_agent import PPOAgent
 
-    if front < 300:
-        if left > right:
-            return ["STEER_LEFT"]
-        else:
-            return ["STEER_RIGHT"]
-    else:
-        return ["ACCELERATE"]
+# Global agent instance reused between calls
+agent = PPOAgent()
+
+
+def return_action(request_dict: Dict) -> list[str]:
+    """Return next actions for the car using a PPO policy with Kalman filtering."""
+    sensors = request_dict.get("sensors", {})
+    return agent.predict(sensors)
