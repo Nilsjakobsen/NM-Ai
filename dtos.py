@@ -11,9 +11,16 @@ class RaceCarPredictRequestDto(BaseModel):
     sensors: Dict[str, Optional[int]]  
 
 class RaceCarPredictResponseDto(BaseModel):
+    """Response model returned from the prediction endpoint."""
+
     actions: List[str]
-    # 'ACCELERATE'
-    # 'DECELERATE'
-    # 'STEER_LEFT'
-    # 'STEER_RIGHT'
-    # 'NOTHING''
+    """
+    The actions the game should perform.
+
+    Valid actions are:
+    - ``ACCELERATE``
+    - ``DECELERATE``
+    - ``STEER_LEFT``
+    - ``STEER_RIGHT``
+    - ``NOTHING``
+    """
