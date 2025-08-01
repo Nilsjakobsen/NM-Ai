@@ -1,6 +1,5 @@
 from typing import Dict
 
-
 def return_action(request_dict: Dict) -> list[str]:
     """Return a simple action based on nearby sensor readings."""
 
@@ -13,9 +12,9 @@ def return_action(request_dict: Dict) -> list[str]:
     if front < 300:
         if left > right:
             return ["STEER_LEFT"]
-        if right > left:
+        elif right > left:
             return ["STEER_RIGHT"]
-        # If both sides are blocked, slow down
-        return ["DECELERATE"]
+        else:
+            return ["DECELERATE"]  # If both sides are blocked
 
     return ["ACCELERATE"]
