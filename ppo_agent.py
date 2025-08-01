@@ -46,14 +46,16 @@ class PPOAgent:
     def predict(self, sensors: Dict[str, float]) -> List[str]:
         """Return a batch of actions from the PPO policy."""
         obs = self._filter_observation(sensors)
+
+        # Fallback rule-based logic if PPO model not available
         if self.model is None:
-            # Fallback rule-based logic if PPO model not available
-            front = sensors.get("front", 1000) or 1000
-            left = sensors.get("front_left_front", 1000) or 1000
-            right = sensors.get("front_right_front", 1000) or 1000
+            front = sensors.get("front", 1000)
+            left = sensors.get("front_left_front", 1000)
+            right = sensors.get("front_right_front", 1000)
             if front < 300:
                 return ["STEER_LEFT"] if left > right else ["STEER_RIGHT"]
             return ["ACCELERATE"]
+
         action_idx, _ = self.model.predict(obs, deterministic=True)
         action = ACTION_MAP.get(int(action_idx), "NOTHING")
         return [action]
