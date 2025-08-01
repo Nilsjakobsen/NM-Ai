@@ -1,11 +1,21 @@
 from typing import Dict
-from ppo_agent import PPOAgent
-
-# Global agent instance reused between calls
-agent = PPOAgent()
 
 
 def return_action(request_dict: Dict) -> list[str]:
-    """Return next actions for the car using a PPO policy with Kalman filtering."""
+    """Return a simple action based on nearby sensor readings."""
+
     sensors = request_dict.get("sensors", {})
-    return agent.predict(sensors)
+    front = sensors.get("front", 1000)
+    left = sensors.get("front_left_front", 1000)
+    right = sensors.get("front_right_front", 1000)
+
+    # If an obstacle is close in front, steer towards the side with the most room
+    if front < 300:
+        if left > right:
+            return ["STEER_LEFT"]
+        if right > left:
+            return ["STEER_RIGHT"]
+        # If both sides are blocked, slow down
+        return ["DECELERATE"]
+
+    return ["ACCELERATE"]
