@@ -111,7 +111,25 @@ If you do not add an action amount, it will default to None, and one action will
 cd race-car
 python example.py
 ```
-By default the action input will use arrowkeys. 
+The example now uses the built-in PPO agent to drive the car automatically. The
+agent will attempt to load a policy from `models/ppo_model.zip` and fall back to
+a simple rule-based policy if the model is missing.
 
 
 **We recommend you do not change the amount of lanes or the size of the game during training.**
+## PPO agent and Kalman filtering
+
+The repository now contains a small PPO-based agent (`ppo_agent.py`) that can be
+trained using [stable-baselines3](https://github.com/DLR-RM/stable-baselines3).
+Sensor measurements are smoothed with a simple Kalman filter
+(`kalman_filter.py`) before being fed to the policy.  At runtime the server will
+attempt to load a model from `models/ppo_model.zip`.  If the file is missing or
+the library is not installed, the agent falls back to a basic rule-based policy.
+
+To train your own model, install the optional dependency and run your training
+script:
+
+```bash
+pip install stable-baselines3[extra]
+# ... implement training loop using RaceCarEnv ...
+```
